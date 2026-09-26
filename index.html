@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>안랩샘아카데미 | Copilot 업무 활용 기본교육 실습 교재</title>
+<style>
+:root{
+  --navy:#23436c; --navy-hi:#2d5480;
+  --bg:#f4f6f8; --card:#ffffff; --border:#e4e8ed;
+  --text:#333; --text2:#4a5568; --muted:#7b8794;
+  --blue:#3182ce; --blue-dark:#2b6cb0; --blue-soft:#eaf2fb;
+  --code-bg:#1f232b;
+  --tip-bg:#fff9db; --tip-border:#f2e2a4; --tip-text:#6b5300; --amber:#b7791f;
+  --shadow:0 1px 2px rgba(16,24,40,.05), 0 3px 10px rgba(16,24,40,.05);
+  --radius:10px; --sidebar-w:288px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);
+  font-family:"Noto Sans KR","Malgun Gothic","맑은 고딕",sans-serif;
+  font-size:15.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre,.mono{font-family:Consolas,"D2Coding","JetBrains Mono",monospace}
+
+/* ===== 레이아웃 ===== */
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar-w);
+  background:var(--navy);color:#dbe6f3;z-index:50;overflow-y:auto;padding:26px 20px 30px}
+.sidebar h1{font-size:19px;font-weight:700;color:#fff;line-height:1.4}
+.sidebar .subtitle{font-size:12.5px;color:#a8bedb;margin-top:8px;line-height:1.6}
+.sidebar nav{margin-top:22px;display:flex;flex-direction:column;gap:2px}
+.sidebar nav .group{font-size:11px;letter-spacing:1.4px;color:#8aa5c8;font-weight:700;margin:14px 0 4px 4px}
+.sidebar nav a{display:block;color:#c5d6ea;font-size:14px;padding:9px 13px;
+  border-radius:8px;transition:background .16s,color .16s}
+.sidebar nav a:hover{background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
+.sidebar nav a.active{background:var(--navy-hi);color:#fff;font-weight:700}
+.downloads{margin-top:24px;border-top:1px solid rgba(255,255,255,.14);padding-top:18px}
+.downloads h2{font-size:11px;letter-spacing:1.6px;color:#8aa5c8;font-weight:700;margin-bottom:10px}
+.file-link{display:block;color:#c5d6ea;font-size:13px;padding:8px 11px;border-radius:7px;
+  background:rgba(255,255,255,.05);margin-bottom:6px;transition:background .16s}
+.file-link:hover{background:rgba(255,255,255,.13);color:#fff;text-decoration:none}
+.side-tool{margin-top:18px}
+.side-tool button{width:100%;background:transparent;border:1px solid rgba(255,255,255,.24);
+  color:#c5d6ea;font-family:inherit;font-size:12.5px;padding:9px;border-radius:8px;cursor:pointer}
+.side-tool button:hover{background:rgba(255,255,255,.1);color:#fff}
+
+main{margin-left:var(--sidebar-w);padding:38px 48px 110px;max-width:1180px}
+.hero{background:linear-gradient(135deg,#23436c,#3182ce);color:#fff;
+  border-radius:14px;padding:32px 34px;box-shadow:var(--shadow)}
+.hero .badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:1px;
+  background:rgba(255,255,255,.18);border-radius:99px;padding:3px 12px;margin-bottom:10px}
+.hero h1{font-size:27px;font-weight:700;margin-bottom:10px}
+.hero p{font-size:14.5px;opacity:.9;max-width:820px}
+
+.part-title{margin:40px 0 -6px;font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--blue-dark)}
+
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:28px 32px;margin-top:24px;scroll-margin-top:24px}
+.step h2{font-size:23px;font-weight:700;color:var(--navy);line-height:1.35;
+  padding-bottom:13px;border-bottom:2px solid var(--blue);margin-bottom:18px}
+.step h3{font-size:16.5px;font-weight:700;color:var(--navy);margin:22px 0 10px}
+.step h4{font-size:15px;font-weight:700;color:var(--navy);margin:18px 0 8px}
+.step p{color:var(--text2);margin-bottom:10px}
+.step ol,.step ul{margin:10px 0 10px 22px}
+.step li{margin-bottom:7px;color:var(--text2)}
+.step li b{color:var(--text)}
+
+.note{background:var(--tip-bg);border:1px solid var(--tip-border);border-radius:8px;
+  padding:13px 16px;font-size:14.5px;color:var(--tip-text);margin:14px 0}
+.mission{background:var(--blue-soft);border:1px solid #cfe0f5;border-left:4px solid var(--blue);
+  border-radius:8px;padding:14px 17px;margin:16px 0;color:#1f3c5f;font-size:15px}
+.mission ul{margin:6px 0 0 20px}
+.mission li{color:#1f3c5f;margin-bottom:4px}
+
+.code-block{position:relative;margin:14px 0}
+.code-block .label{display:inline-block;font-size:11.5px;font-weight:700;color:#fff;
+  background:var(--blue-dark);border-radius:6px 6px 0 0;padding:3px 11px}
+.code-block pre{background:var(--code-bg);border-radius:0 8px 8px 8px;padding:16px 18px;
+  overflow-x:auto;font-size:13.3px;line-height:1.75;color:#c9d4e0}
+.code-block code{white-space:pre-wrap;word-break:keep-all}
+.copy-btn{position:absolute;top:32px;right:10px;z-index:3;
+  background:rgba(255,255,255,.12);color:#dbe6f3;border:1px solid rgba(255,255,255,.2);
+  border-radius:6px;font-family:inherit;font-size:12px;padding:5px 10px;cursor:pointer}
+.copy-btn:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.answer-box{background:#fbfcfd;border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin:12px 0;font-size:14.5px;color:var(--text2)}
+.answer-box p{margin-bottom:8px}
+
+table.spec{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+table.spec th,table.spec td{border:1px solid var(--border);padding:9px 12px;
+  text-align:left;vertical-align:top;color:var(--text2)}
+table.spec th{background:#f7f9fb;color:var(--navy);font-weight:700;font-size:13.5px}
+
+/* ===== 접이식 참고 ===== */
+.hint{background:#fff;border:1px solid var(--border);border-radius:10px;
+  box-shadow:var(--shadow);margin:18px 0;overflow:hidden}
+.hint summary{list-style:none;cursor:pointer;user-select:none;display:flex;
+  align-items:center;gap:11px;padding:15px 20px;font-size:15px;font-weight:700;
+  color:var(--navy);transition:background .16s}
+.hint summary::-webkit-details-marker{display:none}
+.hint summary:hover{background:#f7f9fb}
+.hint summary:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.hint .lock{font-family:Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1px;
+  color:var(--blue);background:var(--blue-soft);border-radius:99px;padding:3px 9px}
+.hint .lock.prompt{color:var(--amber);background:#fdf3dc}
+.hint .chev{margin-left:auto;color:var(--muted);font-size:12px;transition:transform .22s}
+.hint[open] .chev{transform:rotate(90deg)}
+.hint[open] summary{border-bottom:1px solid var(--border);background:#fafbfc}
+.hint-body{padding:18px 20px 22px;animation:hintSlide .25s ease}
+.hint-body>*:first-child{margin-top:0}
+@keyframes hintSlide{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:34px 0 10px}
+
+@media(max-width:900px){
+  .sidebar{position:static;width:100%;height:auto}
+  main{margin-left:0;padding:22px 16px 70px}
+  .step{padding:20px 18px}
+  .hero{padding:24px 20px}
+}
+@media print{
+  .sidebar,.copy-btn,.side-tool{display:none}
+  main{margin-left:0}
+  .hint>*{display:block !important}
+  .hint .chev{display:none}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <aside class="sidebar">
+    <h1>Copilot 업무 활용<br>기본교육 실습</h1>
+    <div class="subtitle">안랩샘아카데미<br>노트북 → 프롬프트 코치 → Pages → Outlook → 일정 조율 → Copilot Studio</div>
+    <nav>
+      <a href="#intro">준비 사항 · 샘플 자료</a>
+      <div class="group">PART 1. 자료 정리 · 문서화</div>
+      <a href="#step1">1. 노트북에 자료 수집·정리</a>
+      <a href="#step2">2. 프롬프트 코치로 질문 개선</a>
+      <a href="#step3">3. 응답을 Pages로 전환·수정</a>
+      <div class="group">PART 2. 메일 · 일정 · 에이전트</div>
+      <a href="#step4">4. Outlook 메일 초안 작성</a>
+      <a href="#step5">5. 주요 메일·미처리 요청 요약</a>
+      <a href="#step6">6. 참석자 일정 확인·시간 조율</a>
+      <a href="#step7">7. Copilot Studio 에이전트 만들기</a>
+      <a href="#faq">부록. 자주 묻는 문제</a>
+    </nav>
+
+    <div class="downloads">
+      <h2>바로가기</h2>
+      <a class="file-link" href="https://m365.cloud.microsoft/" target="_blank" rel="noopener">🧭 Microsoft 365 Copilot</a>
+      <a class="file-link" href="https://outlook.office.com/" target="_blank" rel="noopener">✉️ Outlook (웹)</a>
+      <a class="file-link" href="https://copilotstudio.microsoft.com/" target="_blank" rel="noopener">🤖 Copilot Studio</a>
+    </div>
+
+    <div class="side-tool">
+      <button type="button" id="toggleAll">📂 참고 전체 펼치기</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <span class="badge">안랩샘아카데미</span>
+      <h1>Copilot 업무 활용 기본교육 실습 교재</h1>
+      <p>여러분은 안랩샘아카데미 "Copilot 업무 활용 기본교육"의 <b>교육 운영 담당자</b>입니다. 다음 기수 교육을 준비하면서 Copilot으로 자료를 정리하고, 커리큘럼을 문서로 만들고, 메일과 일정을 처리하고, 수강생 문의 에이전트까지 만들어 봅니다. <b>예시 프롬프트와 예시 답안은 모두 "참고"에 접어 두었습니다.</b> 먼저 직접 프롬프트를 써 보고, 막힐 때만 펼쳐 보세요.</p>
+    </header>
+
+    <!-- ===================== 준비 ===================== -->
+    <section class="step" id="intro">
+      <h2>실습 준비 사항</h2>
+      <ol>
+        <li><b>Microsoft 365 Copilot 라이선스</b>가 할당된 실습 계정으로 로그인합니다. 노트북, Outlook Copilot, 메일과 일정 기반 질문은 라이선스가 있어야 쓸 수 있습니다.</li>
+        <li>브라우저는 <b>Microsoft Edge</b>나 Chrome 최신 버전을 권장합니다. Outlook은 새 Outlook이나 웹 Outlook을 사용하세요.</li>
+        <li>실습 7(Copilot Studio)은 계정에 Copilot Studio 권한이 있어야 합니다. 권한이 없으면 실습 7의 "간편 방법(에이전트 빌더)"으로 진행합니다.</li>
+        <li>아래 <b>샘플 자료 3종</b>을 각각 Word 문서로 저장해서 본인 <b>OneDrive &gt; "Copilot실습" 폴더</b>에 올려 둡니다.</li>
+      </ol>
+      <div class="note">💡 샘플 자료의 일정, 인원, 수치, 이름은 실습용 <b>가상 데이터</b>입니다. Copilot 메뉴 이름과 위치는 업데이트나 조직 설정에 따라 조금씩 다를 수 있으니(예: 노트북 = 전자 필기장), 비슷한 아이콘과 메뉴를 찾아 진행하세요.</div>
+
+      <h3>샘플 자료 (복사해서 Word 파일로 저장)</h3>
+      <div class="code-block"><span class="label">파일 ① Copilot교육_운영계획서.docx</span><button class="copy-btn">복사</button><pre><code>[안랩샘아카데미 Copilot 업무 활용 기본교육 운영계획서]
+- 과정명: Copilot 업무 활용 기본교육
+- 교육 기간: 2026.10.20(화) ~ 10.29(목), 주 2회(화·목) 19:00~22:00, 총 4회 12시간
+- 운영 방식: 온라인 실시간(Teams) + 회차별 실습 미션
+- 대상: 중소기업 재직자, 구직자, 예비창업자 등 40명
+- 운영 인력: 주강사 1명(김OO), 보조강사 2명(이OO, 박OO), 운영 담당 1명(JUN)
+- 교육 내용: Copilot 채팅·프롬프트 / 노트북·Pages / Outlook 메일·일정 / 에이전트 만들기
+- 수료 기준: 출석 80% 이상 + 회차별 실습 미션 3개 이상 제출
+- 준비 사항: 수강생 실습 계정 발급 및 로그인 테스트(D-7), 사전 설문(D-14)</code></pre></div>
+
+      <div class="code-block"><span class="label">파일 ② 수강생_사전설문결과.docx</span><button class="copy-btn">복사</button><pre><code>[Copilot 업무 활용 기본교육 사전 설문 결과] 응답 36명 / 40명
+- Copilot 사용 경험: 없음 58%, 몇 번 써 봄 33%, 업무에 자주 사용 9%
+- 가장 배우고 싶은 기능: 메일·문서 작성 72%, 자료 요약 61%, 회의·일정 관리 49%
+- 걱정되는 점 1위: 프롬프트를 어떻게 써야 할지 모르겠다 (53%)
+- 걱정되는 점 2위: 회사에 Copilot 라이선스가 없다 (44%)
+- 걱정되는 점 3위: 온라인 수업 속도를 따라가기 어려울 것 같다 (39%)
+- 주관식 의견: "바로 복사해서 쓸 수 있는 프롬프트 예시가 있으면 좋겠다", "퇴근 후 수업이라 실습 시간이 넉넉했으면 한다"</code></pre></div>
+
+      <div class="code-block"><span class="label">파일 ③ 이전기수_운영회고.docx</span><button class="copy-btn">복사</button><pre><code>[이전 기수 Copilot 기본교육 운영 회고]
+- 1회차에 실습 계정 로그인 오류가 몰려 수업이 30분 늦게 시작됨
+- 강사 화면 공유 속도를 따라가지 못한 수강생이 많았음 (채팅 질문 폭주)
+- 회차별 실습 미션 제출률 68% → 수료율 저하 원인
+- 수업 외 시간에 "출석 인정", "미션 제출 방법" 등 같은 문의가 반복됨 (주 40건 이상)
+- 잘된 점: 프롬프트 템플릿 배포와 보조강사 소그룹 실습방 반응이 매우 좋았음</code></pre></div>
+
+      <h3>진행 규칙</h3>
+      <ul>
+        <li><b>프롬프트는 직접 먼저 써 봅니다.</b> 각 실습의 "참고 ① 예시 프롬프트"는 막혔을 때만 펼칩니다.</li>
+        <li><b>결과는 비교하고 검증합니다.</b> "참고 ② 예시 답안"은 여러 정답 중 하나입니다. Copilot 응답은 매번 조금씩 다르게 나오며, 각주(출처)를 눌러 원문과 맞는지 꼭 확인합니다.</li>
+        <li><b>결과물을 이어서 씁니다.</b> 실습 1의 결과가 실습 2와 3의 재료가 되고, 실습 4~7도 같은 시나리오로 이어집니다.</li>
+      </ul>
+      <div class="mission">🎯 최종 목표: 교육 커리큘럼 Page 완성 → 수강생 개강 안내 메일 작성 → 강사진 사전 리허설 일정 확정 → "안랩샘 Copilot 교육 도우미" 에이전트 배포</div>
+    </section>
+
+    <!-- ===================== PART 1 ===================== -->
+    <div class="part-title">PART 1. 자료 정리 · 문서화</div>
+
+    <!-- STEP 1 -->
+    <section class="step" id="step1">
+      <h2>실습 1. Copilot 노트북(전자 필기장)에 자료 수집·정리</h2>
+      <p>Copilot 노트북은 한 프로젝트의 파일, Page, 메모를 한곳에 모아 두고 <b>그 자료를 근거로</b> Copilot에게 질문할 수 있는 작업 공간입니다. 운영계획서, 사전 설문, 이전 기수 회고를 모아서 이번 기수에서 개선할 점을 정리해 봅니다.</p>
+
+      <h3>실습 절차</h3>
+      <ol>
+        <li><b>m365.cloud.microsoft</b>에 접속해 왼쪽 메뉴에서 <b>[노트북]</b>(또는 [전자 필기장])을 선택합니다.</li>
+        <li><b>[새 노트북]</b>을 누르고 이름을 <b>"안랩샘 Copilot 기본교육 운영"</b>으로 입력합니다.</li>
+        <li>오른쪽 콘텐츠 창 위쪽의 <b>[참조 추가]</b>를 누르고 OneDrive "Copilot실습" 폴더의 샘플 파일 3개를 선택합니다.</li>
+        <li>노트북 설정에서 <b>지침(사용자 지정 지침)</b>을 입력해 Copilot이 어떤 역할로, 어떤 형식으로 답할지 정합니다.</li>
+        <li>아래 미션의 결과가 나오도록 직접 프롬프트를 써서 질문합니다.</li>
+        <li>마음에 드는 응답은 <b>노트북에 페이지로 저장</b>하거나 메모로 남깁니다.</li>
+      </ol>
+
+      <div class="mission">🎯 미션: 노트북에서 아래 네 가지를 얻어 보세요.
+        <ul>
+          <li>Copilot이 "교육 운영 전문가" 역할로, 첨부 자료만 근거로 답하게 하는 <b>노트북 지침</b></li>
+          <li>첨부 자료 3개를 각각 <b>3줄로 요약</b>한 결과</li>
+          <li>설문과 회고를 비교해서 뽑은 <b>이번 기수 개선 이슈 5가지 표</b> (이슈 / 근거 / 개선 방향)</li>
+          <li>개강일(10/20) 기준 <b>D-14, D-7, D-1 준비 체크리스트</b></li>
+        </ul>
+        개선 이슈 표는 실습 2와 3에서 다시 씁니다.
+      </div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">노트북 지침 예시</span><button class="copy-btn">복사</button><pre><code>너는 성인 대상 디지털 교육을 운영하는 교육 운영 전문가야. 이 노트북에 첨부된 자료만 근거로 답해 줘.
+답변은 한국어로 쓰고, 핵심은 표로 정리하고, 근거가 된 파일명을 함께 표시해 줘.
+자료에 없는 내용은 추측하지 말고 "자료에 없음"이라고 알려 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ① 자료 요약</span><button class="copy-btn">복사</button><pre><code>첨부된 3개 자료를 각각 3줄로 요약해 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ② 개선 이슈 정리</span><button class="copy-btn">복사</button><pre><code>사전 설문 결과와 이전 기수 운영 회고를 비교해서, 이번 Copilot 기본교육에서 꼭 개선해야 할 이슈 5가지를
+[이슈 | 근거(파일명·수치) | 개선 방향] 형식의 표로 정리해 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ③ 준비 체크리스트</span><button class="copy-btn">복사</button><pre><code>운영계획서 일정을 기준으로, 개강일(10/20) 전까지 운영 담당자가 준비해야 할 일을
+D-14, D-7, D-1 단계별 체크리스트로 만들어 줘. 담당(주강사/보조강사/운영 담당)도 같이 표시해 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 개선 이슈 표 &amp; 체크리스트<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <h4>개선 이슈 5가지 예시</h4>
+          <table class="spec">
+            <tr><th>이슈</th><th>근거(파일명·수치)</th><th>개선 방향</th></tr>
+            <tr><td>실습 계정 로그인 오류</td><td>운영회고: 1회차 30분 지연 / 설문: 라이선스 걱정 44%</td><td>D-7 로그인 테스트 필수, 1회차 18:30부터 사전 접속 헬프데스크 운영</td></tr>
+            <tr><td>프롬프트 작성 어려움</td><td>설문: 걱정 1위 53% / 주관식 "프롬프트 예시 요청"</td><td>프롬프트 템플릿 배포(이전 기수 호평), 1회차에 프롬프트 코치 실습 배치</td></tr>
+            <tr><td>수업 속도 따라가기 어려움</td><td>설문: 39% / 운영회고: 채팅 질문 폭주</td><td>보조강사 2명이 소그룹 실습방 운영, 단계별 화면 캡처 교재 제공</td></tr>
+            <tr><td>미션 제출률 저조</td><td>운영회고: 제출률 68%</td><td>회차별 미니 미션, 마감 전날 리마인드 메일, 수업 중 제출 시간 10분 확보</td></tr>
+            <tr><td>반복 문의 과다</td><td>운영회고: 주 40건 이상 같은 문의</td><td>FAQ 문서화, 수강생 문의용 Copilot 에이전트 배포(실습 7)</td></tr>
+          </table>
+          <h4>준비 체크리스트 예시</h4>
+          <table class="spec">
+            <tr><th>시점</th><th>할 일</th><th>담당</th></tr>
+            <tr><td>D-14 (10/6)</td><td>사전 설문 마감 및 분석, 교안 초안 검토, 강사진 리허설 일정 확정</td><td>운영 담당 / 주강사</td></tr>
+            <tr><td>D-7 (10/13)</td><td>실습 계정 발급 및 로그인 테스트 안내, 프롬프트 템플릿·교재 배포, 소그룹 실습방 구성</td><td>운영 담당 / 보조강사</td></tr>
+            <tr><td>D-1 (10/19)</td><td>Teams 수업 링크 재공지, 로그인 미완료자 개별 연락, 강사 장비·화면 공유 최종 점검</td><td>운영 담당 / 전원</td></tr>
+          </table>
+          <div class="note">✅ 확인 포인트: 응답 속 각주 번호를 눌러 수치(53%, 44%, 68%)가 원문과 맞는지 확인했나요? 자료에 없는 내용이 섞였다면 노트북 지침을 다시 점검하세요.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" id="step2">
+      <h2>실습 2. Copilot 프롬프트 코치 에이전트로 질문 개선</h2>
+      <p><b>Prompt Coach(프롬프트 코치)</b>는 Microsoft가 기본 제공하는 에이전트입니다. 내가 쓴 프롬프트를 진단하고 더 좋은 프롬프트로 고쳐 줍니다. 좋은 프롬프트의 4요소인 <b>목표(Goal), 맥락(Context), 출처(Source), 기대 결과(Expectation)</b>를 기준으로 피드백을 줍니다.</p>
+
+      <table class="spec">
+        <tr><th>요소</th><th>의미</th><th>생각해 볼 질문</th></tr>
+        <tr><td>목표 (Goal)</td><td>무엇을 얻고 싶은가</td><td>어떤 결과물이 필요한가?</td></tr>
+        <tr><td>맥락 (Context)</td><td>왜, 누구를 위해, 어떤 상황인가</td><td>수강생은 누구이고, 어떤 문제가 있었나?</td></tr>
+        <tr><td>출처 (Source)</td><td>어떤 자료를 근거로 할 것인가</td><td>어떤 파일을 참고해야 하나?</td></tr>
+        <tr><td>기대 결과 (Expectation)</td><td>형식, 분량, 어조</td><td>표로? 회차별로? 어떤 항목이 필요한가?</td></tr>
+      </table>
+
+      <h3>실습 절차</h3>
+      <ol>
+        <li>Microsoft 365 Copilot 채팅 왼쪽의 <b>[에이전트]</b> 영역에서 <b>[모든 에이전트]</b>(또는 에이전트 스토어)를 엽니다.</li>
+        <li>검색창에 <b>"Prompt Coach"</b>를 입력하고 <b>[추가]</b>를 누릅니다.</li>
+        <li>왼쪽 에이전트 목록에서 Prompt Coach를 선택해 대화를 시작합니다.</li>
+        <li>아래 <b>"개선할 프롬프트"</b>를 코치에게 보내고 피드백을 받습니다.</li>
+        <li>코치의 질문에 답하면서 프롬프트를 완성합니다. 실습 1의 자료 내용을 맥락으로 활용하세요.</li>
+        <li>완성한 프롬프트를 일반 Copilot 채팅(또는 실습 1 노트북)에 넣고 <b>개선 전과 후의 결과를 비교</b>합니다.</li>
+      </ol>
+
+      <div class="mission">🎯 미션: 아래 프롬프트를 코치와 함께 개선해 보세요.
+        <ul>
+          <li>개선할 프롬프트: <b>"Copilot 교육 커리큘럼 만들어줘"</b></li>
+          <li>4요소가 모두 들어간 개선 프롬프트를 완성합니다.</li>
+          <li>다음 교육에서도 쓸 수 있는 <b>빈칸형 프롬프트 템플릿</b>으로 바꿔 달라고 요청합니다.</li>
+          <li>개선 전과 후 응답의 차이를 한 줄로 적어 봅니다.</li>
+        </ul>
+        완성한 프롬프트는 실습 3에서 그대로 사용합니다.
+      </div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">코치에게 보내는 첫 프롬프트</span><button class="copy-btn">복사</button><pre><code>이 프롬프트를 더 좋게 개선해 줘: "Copilot 교육 커리큘럼 만들어줘"</code></pre></div>
+          <div class="code-block"><span class="label">추가 요청 예시</span><button class="copy-btn">복사</button><pre><code>개선한 프롬프트에서 각 문장이 목표·맥락·출처·기대 결과 중 무엇에 해당하는지 표시해 줘.
+그리고 다음 기수 교육에도 쓸 수 있게 빈칸형 프롬프트 템플릿으로도 만들어 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 코치 피드백 &amp; 개선된 프롬프트<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <h4>Prompt Coach 피드백 예시</h4>
+          <div class="answer-box">
+            <p>좋은 출발입니다! 다만 지금 프롬프트에는 <b>목표</b>만 있고 나머지 요소가 빠져 있어서 일반적인 답변이 나올 가능성이 큽니다.</p>
+            <p>• <b>맥락</b>: 수강생이 누구인지, 교육 시간과 회차, 수강생의 수준을 알려 주세요.<br>
+            • <b>출처</b>: 참고할 파일(설문, 회고)을 지정하면 근거 있는 결과가 나옵니다.<br>
+            • <b>기대 결과</b>: 회차별 표인지, 어떤 항목이 필요한지, 실습 비율은 얼마인지 정해 주세요.</p>
+          </div>
+          <h4>개선된 프롬프트 예시</h4>
+          <div class="code-block"><span class="label">개선 후 프롬프트</span><button class="copy-btn">복사</button><pre><code>[목표] 안랩샘아카데미 "Copilot 업무 활용 기본교육" 4회차 커리큘럼 초안을 만들어 줘.
+[맥락] 수강생은 중소기업 재직자, 구직자, 예비창업자 40명이고, 58%는 Copilot을 써 본 적이 없어.
+수업은 10/20~10/29 화·목 19:00~22:00 온라인(Teams)으로 진행해.
+이전 기수에서는 1회차 로그인 오류, 수업 속도, 미션 제출률 68%가 문제였어.
+[출처] /수강생_사전설문결과 와 /이전기수_운영회고 파일을 근거로 해 줘.
+[기대 결과] 회차별 표로 [시간 | 주제 | 진행 방식(시연/실습/미션) | 담당]을 작성하고,
+시연과 실습 비율은 4:6, 매 회차 끝에 10분 미션 제출 시간을 넣어 줘.
+마지막에 이전 기수와 달라진 점 3가지를 요약해 줘.</code></pre></div>
+          <h4>빈칸형 템플릿 예시</h4>
+          <div class="code-block"><span class="label">교육 운영 프롬프트 템플릿</span><button class="copy-btn">복사</button><pre><code>[목표] ______을(를) 만들어 줘.
+[맥락] 대상은 ______이고, 일정과 상황은 ______이야. 해결하고 싶은 문제는 ______야.
+[출처] /______ 파일(또는 메일, 회의)을 근거로 해 줘.
+[기대 결과] ______ 형식으로, ______ 분량과 어조로 작성해 줘.</code></pre></div>
+          <div class="note">✅ 비교 한 줄 예시: "개선 전에는 어디서나 볼 수 있는 일반 Copilot 강의 목차가 나왔는데, 개선 후에는 초보자 비율과 로그인 문제를 반영한 실습 중심 일정이 나왔다."</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" id="step3">
+      <h2>실습 3. Copilot 응답을 Pages로 전환 및 수정</h2>
+      <p><b>Copilot Pages</b>는 채팅 응답을 편집하고 공유할 수 있는 문서로 바꿔 줍니다. Page에서 직접 고치고, 원하는 부분만 Copilot에게 다시 쓰게 하고, 강사진과 함께 편집할 수 있습니다.</p>
+
+      <h3>실습 절차</h3>
+      <ol>
+        <li>Copilot 채팅(또는 실습 1 노트북)에 <b>실습 2에서 완성한 프롬프트</b>를 입력합니다.</li>
+        <li>응답 아래의 <b>[Pages에서 편집]</b>(연필 아이콘)을 누르면 오른쪽에 Page가 열립니다.</li>
+        <li>Page 제목을 <b>"안랩샘 Copilot 기본교육 커리큘럼(안)"</b>으로 바꿉니다.</li>
+        <li>고치고 싶은 부분을 <b>드래그로 선택</b>한 뒤 Page 안의 Copilot 입력창(Ask Copilot)에 수정 요청을 입력합니다.</li>
+        <li>채팅에서 추가로 받은 응답(예: 보고용 요약)을 <b>같은 Page에 추가</b>합니다.</li>
+        <li>오른쪽 위 <b>[공유]</b>로 링크를 복사해 옆 사람(강사진 역할)에게 보내고 공동 편집을 요청합니다.</li>
+      </ol>
+
+      <div class="mission">🎯 미션: 커리큘럼 Page를 아래처럼 고쳐 보세요.
+        <ul>
+          <li>1회차 시작 전에 <b>30분 사전 접속·로그인 점검 시간</b>(18:30~19:00)을 추가합니다.</li>
+          <li>표에 <b>준비물</b>과 <b>보조강사 역할</b> 열을 추가합니다.</li>
+          <li>운영사무국에 보고할 수 있게 <b>5줄 요약</b>과 <b>운영 목표(KPI) 표</b>를 Page 맨 위에 넣습니다.</li>
+          <li>옆 사람에게 공유 링크를 보내 한 줄 의견을 받습니다.</li>
+        </ul>
+      </div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">Page 안에서 부분 수정 ① (1회차 부분 선택 후)</span><button class="copy-btn">복사</button><pre><code>이전 기수에서 1회차에 로그인 오류로 30분이 늦어졌어.
+수업 시작 전 18:30~19:00에 사전 접속·로그인 점검 시간을 추가하고, 보조강사가 헬프데스크를 맡도록 바꿔 줘.</code></pre></div>
+          <div class="code-block"><span class="label">Page 안에서 부분 수정 ② (표 전체 선택 후)</span><button class="copy-btn">복사</button><pre><code>각 회차 옆에 "준비물"과 "보조강사 역할" 열을 추가해 줘.</code></pre></div>
+          <div class="code-block"><span class="label">채팅에서 추가 응답 받아 Page에 붙이기</span><button class="copy-btn">복사</button><pre><code>이 커리큘럼을 운영사무국에 보고할 수 있게 5줄 요약을 써 주고,
+이전 기수와 비교한 운영 목표(출석률, 미션 제출률, 수료율, 만족도)를 표로 만들어 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 완성된 커리큘럼 Page<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <h4>📄 안랩샘 Copilot 기본교육 커리큘럼(안)</h4>
+          <div class="answer-box">
+            <p><b>보고용 요약</b><br>
+            ① 4회차 12시간, 시연과 실습 비율 4:6의 실습 중심 과정<br>
+            ② 1회차 18:30부터 사전 접속 헬프데스크를 운영해 로그인 지연 방지<br>
+            ③ 보조강사 2명이 소그룹 실습방을 운영해 수업 속도 격차 해소<br>
+            ④ 매 회차 끝 10분 미션 제출 시간과 리마인드 메일로 제출률 향상<br>
+            ⑤ 4회차에 수강생 문의용 에이전트를 함께 만들어 반복 문의 감소</p>
+          </div>
+          <table class="spec">
+            <tr><th>회차</th><th>주제</th><th>주요 실습</th><th>준비물</th><th>보조강사 역할</th></tr>
+            <tr><td>1회차 10/20(화)<br><span style="color:var(--muted)">18:30 사전 접속</span></td><td>Copilot 시작하기 · 프롬프트 기본</td><td>Copilot 채팅, 프롬프트 4요소, 프롬프트 코치</td><td>실습 계정, 프롬프트 템플릿</td><td>로그인 헬프데스크, 소그룹 실습방</td></tr>
+            <tr><td>2회차 10/22(목)</td><td>자료 정리 · 문서화</td><td>Copilot 노트북, Pages 전환·공동 편집</td><td>샘플 자료 3종(OneDrive 업로드)</td><td>파일 업로드 오류 지원</td></tr>
+            <tr><td>3회차 10/27(화)</td><td>메일 · 일정 관리</td><td>Outlook 초안 작성, 메일 요약, 일정 조율</td><td>Outlook 접속 확인</td><td>따라가기 어려운 수강생 1:1 지원</td></tr>
+            <tr><td>4회차 10/29(목)</td><td>에이전트 만들기 · 미션 발표</td><td>Copilot Studio 에이전트 제작, 미션 공유</td><td>Copilot Studio 권한 확인</td><td>발표 진행, 수료 요건 확인</td></tr>
+          </table>
+          <table class="spec">
+            <tr><th>운영 지표</th><th>이전 기수</th><th>이번 기수 목표</th></tr>
+            <tr><td>1회차 정시 시작</td><td>30분 지연</td><td>정시 시작</td></tr>
+            <tr><td>미션 제출률</td><td>68%</td><td>85% 이상</td></tr>
+            <tr><td>수료율</td><td>–</td><td>80% 이상</td></tr>
+            <tr><td>반복 문의 건수</td><td>주 40건 이상</td><td>주 15건 이하</td></tr>
+          </table>
+          <div class="note">✅ Page는 자동 저장되고 링크로 공유할 수 있습니다. 공유받은 사람도 권한이 있으면 같은 Page를 동시에 편집하고 Copilot에게 수정을 요청할 수 있습니다.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===================== PART 2 ===================== -->
+    <div class="part-title">PART 2. 메일 · 일정 · 에이전트</div>
+
+    <!-- STEP 4 -->
+    <section class="step" id="step4">
+      <h2>실습 4. Outlook에서 메일 초안 작성</h2>
+      <p>Outlook의 <b>Copilot으로 초안 작성</b> 기능을 쓰면 요청 내용만 입력해도 메일 본문이 만들어집니다. 어조와 길이를 조정하고, 보내기 전에 <b>Copilot 코칭</b>으로 문장을 점검해 봅니다.</p>
+
+      <h3>실습 절차</h3>
+      <ol>
+        <li>Outlook에서 <b>[새 메일]</b>을 누릅니다.</li>
+        <li>본문 영역이나 리본의 <b>Copilot 아이콘</b>을 누르고 <b>[Copilot으로 초안 작성]</b>을 선택합니다.</li>
+        <li>아래 "메일에 들어가야 할 내용"이 모두 담기도록 <b>직접 프롬프트를 써서</b> 입력하고 <b>[생성]</b>을 누릅니다.</li>
+        <li>결과를 보고 <b>어조(격식/중립 등)와 길이</b>를 바꾸거나, 추가 지시를 입력해 다시 생성합니다.</li>
+        <li>마음에 들면 <b>[유지]</b>를 누르고 본문을 직접 다듬습니다.</li>
+        <li>다시 Copilot 아이콘을 눌러 <b>[Copilot 코칭]</b>으로 어조, 명확성, 독자 반응을 점검한 뒤 발송합니다(실습에서는 본인에게 발송).</li>
+      </ol>
+
+      <h3>메일에 들어가야 할 내용</h3>
+      <table class="spec">
+        <tr><th>항목</th><th>내용</th></tr>
+        <tr><td>받는 사람</td><td>Copilot 업무 활용 기본교육 합격 수강생 40명</td></tr>
+        <tr><td>목적</td><td>개강 안내와 사전 준비 요청</td></tr>
+        <tr><td>교육 일정</td><td>10/20~10/29, 화·목 19:00~22:00, 온라인(Teams), 총 4회</td></tr>
+        <tr><td>사전 준비</td><td>① 실습 계정 로그인 테스트 ② 사전 설문 참여 → <b>10월 16일(금)까지</b></td></tr>
+        <tr><td>당부 사항</td><td>1회차는 18:30부터 사전 접속·로그인 점검, 수료 기준은 출석 80% 이상 + 미션 3개 이상 제출</td></tr>
+        <tr><td>어조</td><td>친절하고 간결하게, 처음 듣는 사람도 이해하기 쉽게</td></tr>
+      </table>
+
+      <div class="mission">🎯 미션: 위 내용이 모두 담긴 초안을 생성하고, 추가 지시로 한 번 이상 다듬어 보세요. 그다음 Copilot 코칭 결과 중 하나를 반영해 본인에게 보냅니다.</div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">초안 작성 프롬프트</span><button class="copy-btn">복사</button><pre><code>안랩샘아카데미 "Copilot 업무 활용 기본교육" 합격 수강생에게 보낼 개강 안내 메일을 써 줘.
+- 교육 일정: 10/20~10/29, 매주 화·목 19:00~22:00, 온라인(Teams) 총 4회
+- 사전 준비: ① 실습 계정 로그인 테스트 ② 사전 설문 참여, 10월 16일(금)까지 완료
+- 1회차는 18:30부터 사전 접속해서 로그인을 점검해 달라고 안내
+- 수료 기준: 출석 80% 이상 + 회차별 실습 미션 3개 이상 제출
+Copilot을 처음 쓰는 분도 많으니 친절하고 간결하게 써 줘.</code></pre></div>
+          <div class="code-block"><span class="label">다시 생성할 때 추가 지시 예시</span><button class="copy-btn">복사</button><pre><code>일정을 표로 정리해 주고, 마지막에 문의처(안랩샘아카데미 운영사무국 이메일)를 추가해 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 완성된 메일<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="answer-box">
+            <p><b>제목:</b> [안랩샘아카데미] Copilot 업무 활용 기본교육 개강 안내 및 사전 준비 요청 (~10/16)</p>
+            <p>안녕하세요, 안랩샘아카데미 운영 담당 JUN입니다.</p>
+            <p>"Copilot 업무 활용 기본교육" 합격을 진심으로 축하드립니다. 원활한 수업을 위해 <b>10월 16일(금)까지</b> 아래 사전 준비를 꼭 완료해 주세요.</p>
+            <p><b>■ 사전 준비 (~10/16)</b><br>① 실습 계정 로그인 테스트: 안내받은 계정으로 Microsoft 365에 로그인해 Copilot 화면이 열리는지 확인해 주세요.<br>② 사전 설문 참여: 수준에 맞는 수업을 준비하는 데 활용됩니다.</p>
+            <p><b>■ 교육 일정</b> (온라인 실시간, Teams)</p>
+            <table class="spec">
+              <tr><th>회차</th><th>일시</th><th>주제</th></tr>
+              <tr><td>1회차</td><td>10/20(화) 19:00~22:00 <span style="color:var(--muted)">(18:30 사전 접속)</span></td><td>Copilot 시작하기 · 프롬프트 기본</td></tr>
+              <tr><td>2회차</td><td>10/22(목) 19:00~22:00</td><td>자료 정리 · 문서화</td></tr>
+              <tr><td>3회차</td><td>10/27(화) 19:00~22:00</td><td>메일 · 일정 관리</td></tr>
+              <tr><td>4회차</td><td>10/29(목) 19:00~22:00</td><td>에이전트 만들기 · 미션 발표</td></tr>
+            </table>
+            <p style="margin-top:10px"><b>■ 수료 기준</b><br>출석 80% 이상 + 회차별 실습 미션 3개 이상 제출</p>
+            <p>Copilot을 처음 쓰셔도 괜찮습니다. 보조강사가 실습을 함께 도와드립니다. 궁금한 점은 운영사무국 이메일로 편하게 문의해 주세요.</p>
+            <p>JUN 드림</p>
+          </div>
+          <div class="note">✅ Copilot 코칭 반영 예시: "수신자가 해야 할 행동과 기한이 앞부분에 드러나지 않는다"는 피드백이 나오면 제목과 첫 문단에 기한(10/16)을 넣어 보세요.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step" id="step5">
+      <h2>실습 5. 지난주 주요 메일과 미처리 요청 요약</h2>
+      <p>한 주 동안 쌓인 수강생 문의, 강사 메일, 운영사무국 요청을 하나씩 열어 보지 않고 Copilot에게 <b>중요한 메일과 아직 처리하지 않은 요청</b>만 골라 달라고 해 봅니다. 긴 메일 스레드 하나는 Outlook의 <b>요약</b> 기능으로 빠르게 파악합니다.</p>
+
+      <h3>방법 A. Copilot 채팅으로 메일함 전체 요약</h3>
+      <ol>
+        <li>Microsoft 365 Copilot 채팅을 열고 <b>업무(Work)</b> 모드인지 확인합니다.</li>
+        <li>기간, 제외할 메일, 원하는 표 형식을 넣어 직접 프롬프트를 씁니다. 특정 사람의 메일만 보려면 <b>/</b>를 입력해 사람을 지정합니다.</li>
+        <li>응답의 각주(출처) 링크를 눌러 실제 메일을 확인합니다.</li>
+      </ol>
+      <h3>방법 B. Outlook에서 메일 스레드 요약</h3>
+      <ol>
+        <li>Outlook에서 긴 메일 스레드(예: 강사 교안 검토 메일)를 엽니다.</li>
+        <li>메일 위쪽의 <b>[Copilot으로 요약]</b>(또는 요약) 버튼을 누릅니다.</li>
+        <li>바로 답장이 필요하면 실습 4처럼 <b>[Copilot으로 초안 작성]</b>으로 이어서 답장을 씁니다.</li>
+      </ol>
+
+      <div class="mission">🎯 미션: 아래 세 가지 결과를 얻어 보세요.
+        <ul>
+          <li>지난주 받은 메일 중 <b>중요한 메일 5개</b>를 보낸 사람, 제목, 핵심 내용, 필요한 조치로 정리한 표 (광고, 뉴스레터, 자동 알림 제외)</li>
+          <li>메일과 Teams 채팅에서 나에게 요청했지만 <b>아직 처리하지 않은 일</b>을 기한 순서로 정리한 표</li>
+          <li>최근 2주간 <b>"Copilot 교육"</b> 관련 메일에서 결정된 사항과 아직 결정되지 않은 사항</li>
+        </ul>
+        미처리 요청 중 1건은 방법 B → 실습 4 방식으로 답장 초안까지 만들어 봅니다.
+      </div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">프롬프트 ① 주간 메일 요약</span><button class="copy-btn">복사</button><pre><code>지난주(월~금) 내가 받은 메일 중 중요한 메일 5개를 골라
+[보낸 사람 | 제목 | 핵심 내용 1줄 | 필요한 조치] 표로 정리해 줘.
+광고, 뉴스레터, 자동 알림 메일은 빼 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ② 미처리 요청 찾기</span><button class="copy-btn">복사</button><pre><code>지난주 메일과 Teams 채팅에서 나에게 요청했는데 아직 답하지 않았거나 처리하지 않은 일을 찾아 줘.
+[요청자 | 요청 내용 | 기한 | 우선순위(상/중/하)] 표로 만들고, 기한이 가까운 순서로 정렬해 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ③ 주제별 요약</span><button class="copy-btn">복사</button><pre><code>최근 2주간 "Copilot 교육" 또는 "안랩샘"이 들어간 메일을 요약하고,
+결정된 사항과 아직 결정되지 않은 사항을 나눠서 정리해 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 주간 요약 &amp; 미처리 요청 표<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <p>※ 아래는 예시입니다. 실제 결과는 본인 메일함에 따라 달라집니다.</p>
+          <h4>주요 메일 5개 예시</h4>
+          <table class="spec">
+            <tr><th>보낸 사람</th><th>제목</th><th>핵심 내용</th><th>필요한 조치</th></tr>
+            <tr><td>운영사무국</td><td>Copilot 기본교육 주간 운영 보고 요청</td><td>합격자 확정 현황과 사전 설문 응답률 보고 요청</td><td>주간 보고서 제출</td></tr>
+            <tr><td>김OO 주강사</td><td>1~2회차 교안 초안 송부</td><td>1~2회차 교안 초안 공유, 실습 시간 배분 의견 요청</td><td>교안 검토 의견 회신</td></tr>
+            <tr><td>이OO 보조강사</td><td>소그룹 실습방 구성 문의</td><td>실습방 4개 운영 제안, 수강생 조 편성 명단 요청</td><td>조 편성 명단 전달</td></tr>
+            <tr><td>수강생 최OO</td><td>실습 계정 로그인 오류 문의</td><td>로그인 시 "권한 없음" 메시지가 뜸</td><td>계정 상태 확인 후 안내</td></tr>
+            <tr><td>수강생 정OO</td><td>결석 시 출석 인정 문의</td><td>2회차에 회사 일정이 있어 결석 예정, 보강 가능 여부 문의</td><td>출석·보강 기준 안내</td></tr>
+          </table>
+          <h4>미처리 요청 예시</h4>
+          <table class="spec">
+            <tr><th>요청자</th><th>요청 내용</th><th>기한</th><th>우선순위</th></tr>
+            <tr><td>수강생 최OO</td><td>실습 계정 로그인 오류 해결</td><td>빠른 회신 필요</td><td>상</td></tr>
+            <tr><td>운영사무국</td><td>주간 운영 보고서 제출</td><td>10/2(금)</td><td>상</td></tr>
+            <tr><td>김OO 주강사</td><td>1~2회차 교안 검토 의견 회신</td><td>10/5(월)</td><td>중</td></tr>
+            <tr><td>이OO 보조강사</td><td>소그룹 조 편성 명단 전달(Teams)</td><td>10/8(목)</td><td>중</td></tr>
+            <tr><td>수강생 정OO</td><td>결석 시 출석 인정·보강 안내</td><td>기한 없음</td><td>하</td></tr>
+          </table>
+          <div class="note">⚠️ Copilot은 내가 볼 권한이 있는 메일만 찾아 주며, 일부 메일을 놓칠 수 있습니다. 중요한 요청은 각주 링크로 원문을 꼭 확인하세요.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- STEP 6 -->
+    <section class="step" id="step6">
+      <h2>실습 6. 참석자 일정 확인 및 미팅 시간 조율</h2>
+      <p>개강 전에 주강사, 보조강사 2명과 <b>사전 리허설 회의</b>를 잡아야 합니다. Copilot으로 후보 시간을 찾고, 메일 스레드에서 바로 회의를 잡고, 마지막으로 Outlook <b>일정 도우미</b>로 확인합니다.</p>
+
+      <h3>방법 A. Copilot 채팅으로 가능한 시간 찾기</h3>
+      <ol>
+        <li>Copilot 채팅에서 <b>/</b>를 입력해 참석자(주강사 김OO, 보조강사 이OO, 박OO)를 지정합니다.</li>
+        <li>기간, 회의 길이, 제외할 시간을 넣어 공통으로 비어 있는 시간을 찾아 달라고 합니다.</li>
+        <li>후보 중 하나를 골라 안건과 사전 준비가 담긴 회의 초대 초안을 요청합니다.</li>
+      </ol>
+      <h3>방법 B. Outlook 메일 스레드에서 바로 회의 잡기</h3>
+      <ol>
+        <li>실습 5에서 본 강사 교안 메일 스레드를 엽니다.</li>
+        <li>Copilot 아이콘에서 <b>[Copilot으로 일정 예약]</b>을 누르면 메일 참여자와 요약이 담긴 회의 초대가 자동으로 만들어집니다.</li>
+        <li>제목, 시간, 안건을 확인하고 고칩니다.</li>
+      </ol>
+      <h3>방법 C. 일정 도우미로 최종 확인</h3>
+      <ol>
+        <li>새 모임 창에서 <b>[일정 도우미]</b>를 열어 참석자별 바쁨/한가함 막대를 확인합니다.</li>
+        <li>필수·선택 참석자를 구분하고 Teams 모임을 켠 뒤 <b>[보내기]</b>를 누릅니다.</li>
+      </ol>
+
+      <div class="mission">🎯 미션: 아래 조건으로 리허설 회의를 잡아 보세요(실습에서는 본인만 참석자로 두고 보내도 됩니다).
+        <ul>
+          <li>참석자: 주강사 1명, 보조강사 2명, 본인</li>
+          <li>기간: 10/5(월)~10/8(목), 09:00~18:00 중 <b>60분</b>. 점심시간(12:00~13:00)은 빼고, 10/9(금)은 한글날이라 제외</li>
+          <li>안건: ① 1회차 시연 리허설 ② 로그인 헬프데스크 운영 방법 ③ 소그룹 실습방 역할 분담</li>
+          <li>교육 기간(10/20~10/29) 저녁에 겹치는 내 일정이 있는지도 확인</li>
+        </ul>
+      </div>
+
+      <div class="note">💡 동료의 일정은 조직 설정에 따라 "바쁨/한가함"만 보이거나 아예 확인되지 않을 수 있습니다. Copilot이 시간을 찾지 못하면 방법 C(일정 도우미)로 진행하세요.</div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">프롬프트 ① 가능한 시간 찾기</span><button class="copy-btn">복사</button><pre><code>/김OO, /이OO, /박OO 과 10/5(월)~10/8(목) 업무 시간(09:00~18:00) 중
+60분 회의가 가능한 시간 3개를 찾아 줘. 점심시간(12:00~13:00)은 빼 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ② 회의 초대 초안</span><button class="copy-btn">복사</button><pre><code>첫 번째 후보 시간으로 "Copilot 기본교육 사전 리허설 회의" 초대를 만들어 줘.
+안건은 ① 1회차 시연 리허설 ② 로그인 헬프데스크 운영 방법 ③ 소그룹 실습방 역할 분담으로 하고,
+참석자별로 준비해 올 내용을 한 줄씩 넣어 줘. Teams 온라인 회의로 해 줘.</code></pre></div>
+          <div class="code-block"><span class="label">프롬프트 ③ 일정 충돌 확인</span><button class="copy-btn">복사</button><pre><code>10월 20일, 22일, 27일, 29일 18:00~22:30에 내 일정 중 겹치는 게 있는지 확인하고, 조정이 필요한 일정을 알려 줘.</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 후보 시간 &amp; 회의 초대<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <h4>후보 시간 예시</h4>
+          <table class="spec">
+            <tr><th>후보</th><th>일시</th><th>비고</th></tr>
+            <tr><td>1안</td><td>10/6(화) 14:00~15:00</td><td>전원 가능</td></tr>
+            <tr><td>2안</td><td>10/7(수) 10:00~11:00</td><td>전원 가능, 박OO 다음 일정 11:30 시작</td></tr>
+            <tr><td>3안</td><td>10/8(목) 16:00~17:00</td><td>김OO 일정에 "임시" 표시 있음</td></tr>
+          </table>
+          <h4>회의 초대 예시</h4>
+          <div class="answer-box">
+            <p><b>제목:</b> Copilot 기본교육 사전 리허설 회의<br>
+            <b>일시:</b> 10/6(화) 14:00~15:00 | <b>장소:</b> Teams 온라인 회의<br>
+            <b>참석:</b> 김OO 주강사, 이OO 보조강사, 박OO 보조강사, JUN(운영 담당)</p>
+            <p><b>■ 안건</b><br>① 1회차 시연 리허설 (25분)<br>② 로그인 헬프데스크 운영 방법 (15분)<br>③ 소그룹 실습방 역할 분담 (15분)<br>④ 향후 일정 확인 (5분)</p>
+            <p><b>■ 사전 준비</b><br>• 김OO 주강사: 1회차 시연 화면과 교안 최종본<br>• 이OO 보조강사: 로그인 오류 유형별 대응 방법<br>• 박OO 보조강사: 소그룹 실습방 4개 운영안<br>• JUN: 수강생 명단, 조 편성안, 커리큘럼 Page 링크</p>
+          </div>
+          <h4>일정 충돌 확인 예시</h4>
+          <div class="answer-box">
+            <p>10/27(화) 18:00~19:30에 "외부 협력사 저녁 미팅"이 있어 1시간 정도 겹칩니다. 3회차 수업 준비(18:30 접속)를 생각하면 이 일정을 옮기는 것이 좋습니다. 나머지 날짜에는 겹치는 일정이 없습니다.</p>
+          </div>
+          <div class="note">✅ 초대 본문에 실습 3에서 만든 <b>커리큘럼 Page 링크</b>를 넣으면 강사진이 회의 전에 미리 보고 의견을 남길 수 있습니다.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- STEP 7 -->
+    <section class="step" id="step7">
+      <h2>실습 7. Copilot Studio로 에이전트 만들기</h2>
+      <p>이전 기수에는 "출석 인정되나요?", "미션은 어디에 내요?" 같은 같은 문의가 주 40건 넘게 들어왔습니다. 수강생의 반복 문의에 대신 답하는 <b>"안랩샘 Copilot 교육 도우미"</b> 에이전트를 만들어 Teams에 배포해 봅니다.</p>
+
+      <h3>실습 절차</h3>
+      <ol>
+        <li><b>copilotstudio.microsoft.com</b>에 접속해 오른쪽 위에서 <b>환경</b>이 실습용 환경인지 확인합니다.</li>
+        <li>왼쪽 메뉴의 <b>[만들기]</b> → <b>[새 에이전트]</b>를 선택합니다.</li>
+        <li>대화창에 만들고 싶은 에이전트를 <b>직접 설명</b>합니다. Copilot이 질문하면 답하면서 이름, 설명, 지침을 채웁니다.</li>
+        <li><b>[구성]</b> 탭으로 가서 이름, 설명, <b>지침</b>을 확인하고 다듬습니다.</li>
+        <li><b>[지식 추가]</b>에서 운영계획서, 실습 3의 커리큘럼 Page(또는 Word로 저장한 파일), 수강생 FAQ 문서를 연결합니다.</li>
+        <li>교육 자료로만 답하게 하려면 <b>웹 검색(일반 지식) 사용을 끕니다</b>.</li>
+        <li>수강생이 바로 눌러 볼 <b>제안 프롬프트</b>(시작 질문)를 3~4개 등록합니다.</li>
+        <li>오른쪽 <b>[테스트]</b> 창에서 질문해 보고, 답이 틀리면 지침이나 지식을 고칩니다.</li>
+        <li>오른쪽 위 <b>[게시]</b>를 누른 뒤 <b>[채널]</b> → <b>[Teams 및 Microsoft 365 Copilot]</b>을 추가하고 공유 대상(수강생 그룹)을 지정합니다.</li>
+      </ol>
+
+      <h3>에이전트가 지켜야 할 조건</h3>
+      <table class="spec">
+        <tr><th>구분</th><th>조건</th></tr>
+        <tr><td>답할 내용</td><td>수업 일정, 회차별 내용, 수료 기준, 미션 제출 방법, 실습 계정 로그인 방법</td></tr>
+        <tr><td>답변 방식</td><td>연결된 교육 자료만 근거로 3~5문장, 근거 문서 이름 표시, 절차는 번호로 안내</td></tr>
+        <tr><td>답하지 않을 내용</td><td>자료에 없는 내용은 추측하지 않고 운영사무국으로 안내, 다른 수강생의 개인정보(연락처, 출석 현황 등)는 거절</td></tr>
+        <tr><td>어조</td><td>존댓말, Copilot을 처음 쓰는 사람도 이해할 수 있게 친근하게</td></tr>
+      </table>
+
+      <div class="note">💡 <b>간편 방법(에이전트 빌더):</b> Copilot Studio 권한이 없다면 Microsoft 365 Copilot 채팅의 <b>[에이전트] → [에이전트 만들기]</b>에서 같은 설명, 지침, 파일로 가벼운 에이전트를 만들 수 있습니다. 여러 채널 배포, 흐름 자동화, 세밀한 설정이 필요할 때 Copilot Studio를 사용합니다.</div>
+
+      <div class="mission">🎯 미션: 위 조건을 지키는 에이전트를 만들고, 아래처럼 직접 테스트 질문을 만들어 확인한 뒤 Teams 채널에 게시해 보세요.
+        <ul>
+          <li>자료에 답이 있는 질문 3개 (일정, 수료 기준, 계정 등)</li>
+          <li>자료에 답이 없는 질문 1개 → 운영사무국으로 안내하는지 확인</li>
+          <li>개인정보를 묻는 질문 1개 → 정중하게 거절하는지 확인</li>
+        </ul>
+      </div>
+
+      <details class="hint">
+        <summary><span class="lock prompt">참고 ①</span>예시 프롬프트 · 지침 · 테스트 질문 – 막힐 때만 펼쳐 보세요<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <div class="code-block"><span class="label">에이전트 설명 프롬프트 (만들기 대화창)</span><button class="copy-btn">복사</button><pre><code>안랩샘아카데미 "Copilot 업무 활용 기본교육" 수강생을 돕는 "안랩샘 Copilot 교육 도우미" 에이전트를 만들고 싶어.
+수강생이 수업 일정, 회차별 내용, 수료 기준, 미션 제출 방법, 실습 계정 로그인 방법을 물어보면
+첨부한 교육 자료를 근거로 친절하고 짧게 답해 줘야 해.
+자료에 없는 내용은 추측하지 말고 운영사무국으로 안내하고, 다른 수강생의 개인정보는 절대 알려 주지 마.</code></pre></div>
+          <div class="code-block"><span class="label">지침(Instructions) 예시</span><button class="copy-btn">복사</button><pre><code># 역할
+너는 안랩샘아카데미 "Copilot 업무 활용 기본교육" 수강생을 돕는 "안랩샘 Copilot 교육 도우미"야.
+
+# 답변 원칙
+- 반드시 연결된 지식(운영계획서, 커리큘럼, 수강생 FAQ)만 근거로 답한다.
+- 답변은 3~5문장으로 쉽게 쓰고, 마지막에 근거 문서 이름을 표시한다.
+- 절차를 묻는 질문은 단계별 번호로 안내한다.
+- 자료에 없는 내용은 추측하지 말고 "정확한 안내를 위해 안랩샘아카데미 운영사무국에 문의해 주세요"라고 답한다.
+
+# 금지 사항
+- 다른 수강생의 이름, 연락처, 출석·미션 현황 등 개인정보는 알려 주지 않는다.
+- 수료 기준이나 출석 규정에 예외를 약속하지 않는다.
+
+# 어조
+- 존댓말을 쓰고, Copilot을 처음 쓰는 사람도 이해할 수 있게 친근하게 말한다.</code></pre></div>
+          <div class="code-block"><span class="label">제안 프롬프트 &amp; 테스트 질문</span><button class="copy-btn">복사</button><pre><code>1. 3회차에는 무엇을 배우나요?
+2. 수료하려면 어떤 조건을 채워야 하나요?
+3. 실습 계정 로그인은 언제까지 테스트해야 하나요?
+4. 수업을 녹화본으로 다시 볼 수 있나요?   ← (자료에 없을 때 운영사무국으로 안내하는지 확인)
+5. 같은 조 수강생 연락처 알려 주세요.      ← (개인정보 거절 테스트)</code></pre></div>
+        </div>
+      </details>
+
+      <details class="hint">
+        <summary><span class="lock">참고 ②</span>예시 답안 – 에이전트 구성표 &amp; 테스트 응답<span class="chev">▶</span></summary>
+        <div class="hint-body">
+          <h4>완성된 구성 예시</h4>
+          <table class="spec">
+            <tr><th>항목</th><th>설정 값</th></tr>
+            <tr><td>이름</td><td>안랩샘 Copilot 교육 도우미</td></tr>
+            <tr><td>설명</td><td>Copilot 업무 활용 기본교육 수강생의 일정, 수료 기준, 미션, 계정 문의에 답하는 에이전트</td></tr>
+            <tr><td>지침</td><td>참고 ①의 "지침 예시" 적용</td></tr>
+            <tr><td>지식</td><td>Copilot교육_운영계획서.docx, 안랩샘 Copilot 기본교육 커리큘럼(안)(실습 3 결과), 수강생_FAQ.docx</td></tr>
+            <tr><td>웹 검색</td><td>사용 안 함 (교육 자료만 근거)</td></tr>
+            <tr><td>제안 프롬프트</td><td>회차별 내용 / 수료 기준 / 로그인 테스트 / 미션 제출 방법</td></tr>
+            <tr><td>게시 채널</td><td>Teams 및 Microsoft 365 Copilot (공유 대상: Copilot 기본교육 수강생 그룹)</td></tr>
+          </table>
+          <h4>테스트 응답 예시</h4>
+          <div class="answer-box">
+            <p><b>Q1. 3회차에는 무엇을 배우나요?</b><br>
+            3회차(10월 27일 화요일 19:00~22:00)에서는 메일과 일정 관리를 배웁니다. Outlook에서 Copilot으로 메일 초안을 쓰고, 지난주 메일을 요약하고, 참석자 일정을 확인해 회의 시간을 잡는 실습을 합니다.<br>
+            <span style="color:var(--muted)">📎 근거: 안랩샘 Copilot 기본교육 커리큘럼(안)</span></p>
+            <p><b>Q2. 수료하려면 어떤 조건을 채워야 하나요?</b><br>
+            두 가지를 모두 채우셔야 합니다.<br>1. 전체 4회 중 출석 80% 이상<br>2. 회차별 실습 미션 3개 이상 제출<br>
+            <span style="color:var(--muted)">📎 근거: Copilot교육_운영계획서</span></p>
+            <p><b>Q4. 수업을 녹화본으로 다시 볼 수 있나요?</b><br>
+            죄송하지만 녹화본 제공 여부는 제가 가진 자료에 나와 있지 않습니다. 정확한 안내를 위해 안랩샘아카데미 운영사무국에 문의해 주세요.</p>
+            <p><b>Q5. 같은 조 수강생 연락처 알려 주세요.</b><br>
+            죄송하지만 다른 수강생의 개인정보는 알려 드릴 수 없습니다. 조별 소통은 수업 중 소그룹 실습방이나 Teams 채널을 이용해 주세요.</p>
+          </div>
+          <div class="note">✅ 점검 포인트: ① 근거 문서가 표시되는가 ② 자료에 없는 질문에 추측하지 않는가 ③ 개인정보를 거절하는가. 세 가지가 모두 되어야 배포할 수 있습니다.</div>
+        </div>
+      </details>
+    </section>
+
+    <!-- FAQ -->
+    <section class="step" id="faq">
+      <h2>부록. 자주 묻는 문제 해결</h2>
+      <table class="spec">
+        <tr><th>증상</th><th>원인</th><th>해결 방법</th></tr>
+        <tr><td>노트북·Pages 메뉴가 보이지 않음</td><td>라이선스 미할당 또는 기능 순차 배포 중</td><td>실습 계정에 Microsoft 365 Copilot 라이선스가 있는지 운영진에게 확인 요청</td></tr>
+        <tr><td>노트북이 첨부 파일을 무시하고 답함</td><td>참조 파일 인덱싱 전이거나 지침 부족</td><td>잠시 뒤 다시 시도하고, 지침에 "첨부 자료만 근거로" 문구 넣기</td></tr>
+        <tr><td>Prompt Coach를 찾을 수 없음</td><td>에이전트 미추가 또는 조직 정책</td><td>[모든 에이전트]에서 검색해 추가, 없으면 운영진에게 문의</td></tr>
+        <tr><td>메일 요약에 일부 메일이 빠짐</td><td>검색 범위 한계, 폴더·권한 차이</td><td>기간, 보낸 사람, 키워드를 좁혀 다시 질문</td></tr>
+        <tr><td>동료 일정이 확인되지 않음</td><td>일정 공유 권한 제한</td><td>일정 도우미로 바쁨/한가함 확인, 또는 후보 시간을 메일로 문의</td></tr>
+        <tr><td>Copilot Studio에서 게시가 안 됨</td><td>환경, 라이선스, 관리자 승인 필요</td><td>관리자에게 Teams 게시 승인 요청, 또는 에이전트 빌더로 진행</td></tr>
+      </table>
+      <div class="note">💡 Copilot 응답은 매번 다를 수 있고 틀린 내용이 섞일 수 있습니다. 업무에 쓰기 전에 반드시 출처를 확인하세요.</div>
+    </section>
+
+    <footer>© 2026 안랩샘아카데미 · Copilot 업무 활용 기본교육 실습 교재</footer>
+  </main>
+</div>
+
+<script>
+// 복사 버튼
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(()=>{
+      const old = btn.textContent; btn.textContent='복사됨 ✓';
+      setTimeout(()=>btn.textContent=old,1500);
+    });
+  });
+});
+
+// 참고 전체 펼치기/접기
+const toggleBtn = document.getElementById('toggleAll');
+toggleBtn.addEventListener('click',()=>{
+  const hints = document.querySelectorAll('details.hint');
+  const anyClosed = [...hints].some(d=>!d.open);
+  hints.forEach(d=>d.open = anyClosed);
+  toggleBtn.textContent = anyClosed ? '📁 참고 전체 접기' : '📂 참고 전체 펼치기';
+});
+
+// 스크롤 위치에 따라 메뉴 강조
+const links = document.querySelectorAll('.sidebar nav a');
+const sections = [...links].map(a=>document.querySelector(a.getAttribute('href')));
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(l=>l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(s=>s && obs.observe(s));
+</script>
+</body>
+</html>
